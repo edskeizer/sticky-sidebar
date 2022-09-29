@@ -31,6 +31,12 @@ const StickySidebar = (() => {
        * @type {String|False}
        */
       containerSelector: false,
+
+      /**
+       * When true, the container height will be calculated without padding, default is false.
+       * @type {Boolean}
+       */
+      excludeContainerPadding: false,
   
       /**
        * Inner wrapper selector.
@@ -54,7 +60,9 @@ const StickySidebar = (() => {
        * The sidebar returns to its normal position if its width below this value.
        * @type {Numeric}
        */
-      minWidth: false
+      minWidth: false,
+
+
     };
   
     // ---------------------------------
@@ -220,7 +228,13 @@ const StickySidebar = (() => {
   
         // Container of sticky sidebar dimensions.
         dims.containerTop    = StickySidebar.offsetRelative(this.container).top;
+        
         dims.containerHeight = this.container.clientHeight;
+        if (this.excludeContainerPadding === true && typeof getComputedStyle === 'function') {
+          var containerComputedStyle = getComputedStyle(this.container);
+          dims.containerHeight -= parseFloat(containerComputedStyle.paddingTop) + parseFloat(containerComputedStyle.paddingBottom);
+        }
+
         dims.containerBottom = dims.containerTop + dims.containerHeight;
   
         // Sidebar dimensions.

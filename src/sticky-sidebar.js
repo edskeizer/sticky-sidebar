@@ -229,11 +229,12 @@ const StickySidebar = (() => {
         // Container of sticky sidebar dimensions.
         dims.containerTop    = StickySidebar.offsetRelative(this.container).top;
         
-        dims.containerHeight = this.container.clientHeight;
-        if (this.excludeContainerPadding === true && typeof getComputedStyle === 'function') {
+        var containerHeight = this.container.clientHeight;
+        if (this.options.excludeContainerPadding === true && typeof getComputedStyle === 'function') {
           var containerComputedStyle = getComputedStyle(this.container);
-          dims.containerHeight -= parseFloat(containerComputedStyle.paddingTop) + parseFloat(containerComputedStyle.paddingBottom);
+          containerHeight -= parseFloat(containerComputedStyle.paddingTop) + parseFloat(containerComputedStyle.paddingBottom);
         }
+        dims.containerHeight = containerHeight;
 
         dims.containerBottom = dims.containerTop + dims.containerHeight;
   

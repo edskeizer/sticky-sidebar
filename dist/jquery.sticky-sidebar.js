@@ -107,6 +107,12 @@
 	      resizeSensor: true,
 
 	      /**
+	       * Detect when sidebar and its container change height so re-calculate their dimensions by using native ResizeObserver.
+	       * @type {Boolean}
+	       */
+	      resizeObserver: false,
+
+	      /**
 	       * The sidebar returns to its normal position if its width below this value.
 	       * @type {Numeric}
 	       */
@@ -252,6 +258,8 @@
 	      }, {
 	        key: 'bindEvents',
 	        value: function bindEvents() {
+	          var _this3 = this;
+
 	          window.addEventListener('resize', this, { passive: true, capture: false });
 	          window.addEventListener('scroll', this, { passive: true, capture: false });
 
@@ -264,6 +272,13 @@
 	            }
 	            new resizeSensor(this.sidebarInner, this.handleEvent);
 	            new resizeSensor(this.container, this.handleEvent);
+	          }
+	          if (this.options.resizeObserver && 'undefined' !== typeof ResizeObserver) {
+	            var resizeObserver = new ResizeObserver(function () {
+	              _this3.handleEvent();
+	            });
+
+	            resizeObserver.observe(this.container);
 	          }
 	        }
 	      }, {
@@ -527,7 +542,7 @@
 	      }, {
 	        key: 'updateSticky',
 	        value: function updateSticky() {
-	          var _this3 = this;
+	          var _this4 = this;
 
 	          var event = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -540,21 +555,21 @@
 	                // When browser is scrolling and re-calculate just dimensions
 	                // within scroll. 
 	                case 'scroll':
-	                  _this3._calcDimensionsWithScroll();
-	                  _this3.observeScrollDir();
-	                  _this3.stickyPosition();
+	                  _this4._calcDimensionsWithScroll();
+	                  _this4.observeScrollDir();
+	                  _this4.stickyPosition();
 	                  break;
 
 	                // When browser is resizing or there's no event, observe width
 	                // breakpoint and re-calculate dimensions.
 	                case 'resize':
 	                default:
-	                  _this3._widthBreakpoint();
-	                  _this3.calcDimensions();
-	                  _this3.stickyPosition(true);
+	                  _this4._widthBreakpoint();
+	                  _this4.calcDimensions();
+	                  _this4.stickyPosition(true);
 	                  break;
 	              }
-	              _this3._running = false;
+	              _this4._running = false;
 	            });
 	          })(event.type);
 	        }

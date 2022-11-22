@@ -55,6 +55,12 @@ const StickySidebar = (() => {
        * @type {Boolean}
        */
       resizeSensor: true,
+      
+      /**
+       * Detect when sidebar and its container change height so re-calculate their dimensions by using native ResizeObserver.
+       * @type {Boolean}
+       */
+      resizeObserver: false,
   
       /**
        * The sidebar returns to its normal position if its width below this value.
@@ -211,6 +217,13 @@ const StickySidebar = (() => {
           }
           new resizeSensor(this.sidebarInner, this.handleEvent);
           new resizeSensor(this.container, this.handleEvent);
+        }
+        if (this.options.resizeObserver && 'undefined' !== typeof ResizeObserver) {
+          const resizeObserver = new ResizeObserver(() => {
+            this.handleEvent();
+          });
+          
+          resizeObserver.observe(this.container);
         }
       }
   

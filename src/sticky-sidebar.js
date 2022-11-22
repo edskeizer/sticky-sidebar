@@ -204,9 +204,13 @@ const StickySidebar = (() => {
   
         this.sidebar.addEventListener('update' + EVENT_KEY, this);
   
-        if( this.options.resizeSensor && 'undefined' !== typeof ResizeSensor ){
-          new ResizeSensor(this.sidebarInner, this.handleEvent);
-          new ResizeSensor(this.container, this.handleEvent);
+        if( this.options.resizeSensor && ('undefined' !== typeof ResizeSensor || 'undefined' !== typeof window.ResizeSensor) ){
+          let resizeSensor = ResizeSensor;
+          if ('undefined' !== typeof window.ResizeSensor) {
+            resizeSensor = window.ResizeSensor;
+          }
+          new resizeSensor(this.sidebarInner, this.handleEvent);
+          new resizeSensor(this.container, this.handleEvent);
         }
       }
   
